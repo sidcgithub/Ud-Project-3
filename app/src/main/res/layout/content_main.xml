@@ -13,24 +13,28 @@
         android:id="@+id/main_header"
         android:layout_width="0dp"
         android:layout_height="200dp"
-        android:src="@drawable/header_image"
         android:scaleType="centerCrop"
-        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/header_image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.udacity.LoadingButton
         android:id="@+id/custom_button"
-        android:padding="0dp"
         android:layout_width="0dp"
         android:layout_height="100dp"
         android:layout_margin="0dp"
+        android:background="@color/colorPrimary"
         android:clickable="true"
+        android:focusable="true"
+        android:padding="0dp"
+        app:animatedTextColor="@color/colorPrimaryDark"
+        app:circleBackgroundColor="@color/blue"
+        app:circleProgressColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:focusable="true"
-        android:background="@color/cardview_dark_background"/>
+        app:progressColor="@color/green" />
 
     <RadioGroup
         android:id="@+id/download_group"
@@ -44,22 +48,22 @@
             android:id="@+id/glideRadioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:text="@string/glide_text" />
+            android:text="@string/glide_text"
+            android:textSize="24sp" />
 
         <RadioButton
             android:id="@+id/loadAppRadioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:text="@string/load_app_text" />
+            android:text="@string/load_app_text"
+            android:textSize="24sp" />
 
         <RadioButton
             android:id="@+id/retrofitRadioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:text="@string/retrofit_text" />
+            android:text="@string/retrofit_text"
+            android:textSize="24sp" />
     </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

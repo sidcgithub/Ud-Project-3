@@ -4,15 +4,13 @@ import android.animation.Animator
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.content.Context
+import android.content.res.TypedArray
 import android.graphics.*
-import android.graphics.Color.YELLOW
 import android.util.AttributeSet
 import android.view.View
-import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
-import androidx.core.animation.addListener
-import androidx.core.animation.doOnEnd
 import kotlin.properties.Delegates
+
 
 class LoadingButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -23,8 +21,33 @@ class LoadingButton @JvmOverloads constructor(
     private var paint = Paint()
     private var progressPercent = 0f
     private var buttonText = "Download"
+    private var progressColor: Int?
+    private var circleBackgroundColor: Int?
+    private var circleProgressColor: Int?
+    private var textColor: Int?
 
     private val valueAnimator = ValueAnimator()
+    var attributes: TypedArray? = context.getTheme().obtainStyledAttributes(
+        attrs,
+        R.styleable.LoadingButton,
+        0, 0
+    )
+
+    init {
+        try {
+            circleBackgroundColor =
+                attributes?.getColor(R.styleable.LoadingButton_circleBackgroundColor, Color.CYAN);
+            circleProgressColor =
+                attributes?.getColor(R.styleable.LoadingButton_circleProgressColor, Color.LTGRAY);
+            progressColor =
+                attributes?.getColor(R.styleable.LoadingButton_progressColor, Color.LTGRAY);
+            textColor =
+                attributes?.getColor(R.styleable.LoadingButton_animatedTextColor, Color.LTGRAY);
+        } finally {
+            attributes?.recycle();
+        }
+    }
+
 
     var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
 
@@ -65,7 +88,7 @@ class LoadingButton @JvmOverloads constructor(
             valueAnimator.removeAllListeners()
             valueAnimator.setFloatValues(progressPercent, 100.0f)
             valueAnimator.interpolator = LinearInterpolator()
-            valueAnimator.duration = 2000
+            valueAnimator.duration = 1000
             valueAnimator.addUpdateListener { animation ->
                 progressPercent = animation.animatedValue as Float
             }
@@ -100,8 +123,9 @@ class LoadingButton @JvmOverloads constructor(
         val textPaint = Paint()
         textPaint.textAlign = Paint.Align.CENTER
         textPaint.textSize = 100.0f
+        textPaint.color = textColor ?: Color.WHITE
         paint.style = Paint.Style.FILL
-        paint.color = Color.rgb(0, progressPercent.toInt() * 255, 0)
+        paint.color = progressColor ?: Color.RED
         colorWidth = (progressPercent / 100.0f) * widthSize
         canvas?.drawRect(Rect(0, 0, colorWidth.toInt(), heightSize), paint)
         canvas?.drawText(
@@ -111,7 +135,7 @@ class LoadingButton @JvmOverloads constructor(
             textPaint
         )
         val circlePaint = Paint()
-        circlePaint.color = Color.BLUE
+        circlePaint.color = circleBackgroundColor ?: Color.RED
         circlePaint.style = Paint.Style.FILL
         canvas?.drawCircle(
             (widthSize - 100).toFloat(),
@@ -120,7 +144,7 @@ class LoadingButton @JvmOverloads constructor(
             circlePaint
         )
         val arcPaint = Paint()
-        arcPaint.color = YELLOW
+        arcPaint.color = circleProgressColor ?: Color.BLACK
         arcPaint.style = Paint.Style.FILL
         canvas?.drawArc(
             RectF(

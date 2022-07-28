@@ -50,8 +50,7 @@ class MainActivity : AppCompatActivity() {
         custom_button.setOnClickListener {
             if (custom_button.buttonState == ButtonState.Loading) {
                 Toast.makeText(this, "Download in Progress", Toast.LENGTH_SHORT).show()
-            }
-            else {
+            } else {
                 download()
             }
         }
@@ -146,10 +145,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun launchNotification(downloadExecution: DownloadExecution) {
+        var notificationId = Random().nextInt()
         dintent.putExtra(
             "Status",
             if (downloadExecution == DownloadExecution.SUCCEEDED) "Succeeded" else "Failed"
         )
+        dintent.putExtra("NotifId", notificationId)
         pendingIntent = PendingIntent.getActivity(
             this@MainActivity,
             0,
@@ -166,18 +167,19 @@ class MainActivity : AppCompatActivity() {
                 )
                 .setStyle(
                     NotificationCompat.BigTextStyle()
-                        .bigText( if(downloadExecution == DownloadExecution.SUCCEEDED) "You have downloaded a Github repo. You should now celebrate and rejoice!" else "Failure!")
+                        .bigText(if (downloadExecution == DownloadExecution.SUCCEEDED) "You have downloaded a Github repo. You should now celebrate and rejoice!" else "Failure!")
                 )
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
                 .addAction(
                     R.drawable.ic_launcher_foreground,
                     getString(R.string.open_details),
                     pendingIntent
                 )
-        builder.setContentTitle( if(downloadExecution == DownloadExecution.SUCCEEDED) "Things have gone smoothly" else "Download is not progressing")
+        builder.setContentTitle(if (downloadExecution == DownloadExecution.SUCCEEDED) "Things have gone smoothly" else "Download is not progressing")
 
         with(NotificationManagerCompat.from(this@MainActivity)) {
-            notify(Random().nextInt(), builder.build())
+            notify(notificationId, builder.build())
         }
     }
 
