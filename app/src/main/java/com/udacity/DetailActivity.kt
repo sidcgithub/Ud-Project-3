@@ -1,5 +1,6 @@
 package com.udacity
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,11 @@ class DetailActivity : AppCompatActivity() {
         Toast.makeText(this,text, Toast.LENGTH_SHORT).show()
         fileTtile.text = intent.getStringExtra("Filename")
         status.text = intent.getStringExtra("Status")
+        navigateToMain.setOnClickListener {
+            val mainIntent = Intent(this, MainActivity::class.java)
+            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+            startActivity(mainIntent)
+        }
     }
 
 }
